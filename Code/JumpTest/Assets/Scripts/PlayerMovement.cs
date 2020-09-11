@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     int jump = 0;
 
-    float colDist = 0.75f;
+    int colDist = 2;
 
 
     Rigidbody rBody;
@@ -26,28 +26,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray r = new Ray(transform.position, Vector3.down);
+        Ray r = new Ray(transform.position, Vector3.down * colDist);
 
         Debug.DrawLine(r.origin, r.origin + (Vector3.down * colDist) );
 
         RaycastHit hit;
-
-        if(Physics.Raycast(r, out hit, colDist) )
-        {
-            //Debug.Log(hit.transform.name);
-
-            if(hit.transform.GetComponent<GroundInfo>() != null)
-            {
-                //Debug.Log(hit.transform.GetComponent<GroundInfo>());
-                jump = 0;
-                
-                //Debug.Log("Jump is " + jump);     //jump display test
-            }
-        }
-        
-        
-        
-        
         
         float hAxis = Input.GetAxis("Horizontal");
         float vAxis = Input.GetAxis("Vertical");
@@ -58,6 +41,18 @@ public class PlayerMovement : MonoBehaviour
         {
             Jump();
             jump += 1;
+        }
+
+
+
+        if (Physics.Raycast(r, out hit, colDist))
+        {
+
+            if (hit.transform.GetComponent<GroundInfo>() != null && rBody.velocity.y<=4)
+            {
+                jump = 0;
+
+            }
         }
     }
     
